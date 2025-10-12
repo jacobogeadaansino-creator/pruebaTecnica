@@ -2,7 +2,9 @@ package org.jacobo.pruebacapitole.infrastructure.swapi.feign;
 
 import org.jacobo.pruebacapitole.infrastructure.config.FeignConfig;
 import org.jacobo.pruebacapitole.infrastructure.swapi.dto.people.PeopleFeignDto;
+import org.jacobo.pruebacapitole.infrastructure.swapi.dto.people.PeopleResultFeignDto;
 import org.jacobo.pruebacapitole.infrastructure.swapi.dto.planets.PlanetFeignDto;
+import org.jacobo.pruebacapitole.infrastructure.swapi.dto.planets.PlanetResultFeignDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,10 +28,10 @@ public interface StarWarsFeignClient {
     PlanetFeignDto getPlanetsByPage(@RequestParam(name = "page") int page);
 
     @GetMapping(path = "/planets/{id}", produces = "application/json")
-    PlanetFeignDto getPlanetById(@PathVariable(name = "id") Long id);
+    PlanetResultFeignDto getPlanetById(@PathVariable(name = "id") Long id);
 
     @GetMapping(path = "/people/{id}", produces = "application/json")
-    PeopleFeignDto getPeopleById(@PathVariable(name = "id") Long id);
+    PeopleResultFeignDto getPeopleById(@PathVariable(name = "id") Long id);
 
 
 

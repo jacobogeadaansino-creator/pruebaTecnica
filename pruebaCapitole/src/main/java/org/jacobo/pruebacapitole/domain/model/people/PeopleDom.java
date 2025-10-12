@@ -26,6 +26,6 @@ public class PeopleDom {
     private List<String> starships;
     private LocalDateTime created;
     private LocalDateTime edited;
-    private LocalDateTime url;
+    private String url;
 
 }

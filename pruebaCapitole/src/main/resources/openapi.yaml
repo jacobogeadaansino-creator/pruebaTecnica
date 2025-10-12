@@ -1,8 +1,8 @@
 openapi: 3.0.3
 info:
-  title: Blank API
+  title: Prueba Tecnica Capitole
   version: 1.0.0
-  description: This is a simple API descriptor.
+  description: Techincal test for Capitole
 paths:
   /api/people:
     summary: search people by id
@@ -17,14 +17,17 @@ paths:
             type: string
           in: query
           required: true
-        -
-          name: order
+        - name: orderBy
+          description: field to order the results
+          schema:
+            $ref: '#/components/schemas/OrderBy'
+          required: false
+          in: query
+        - name: order
           description: ''
           schema:
-            enum:
-              - ASC
-              - DESC
-            type: string
+            $ref: '#/components/schemas/OrderDirection'
+          required: false
           in: query
       responses:
         '200':
@@ -112,6 +115,18 @@ paths:
         required: true
 components:
   schemas:
+    OrderBy:
+      type: string
+      enum:
+        - NAME
+        - CREATED
+      description: field to order
+    OrderDirection:
+      type: string
+      enum:
+        - ASC
+        - DESC
+      description: direction of the order
     PaginatedPeopleDto:
       description: Paginated response for people search
       required:

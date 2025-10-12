@@ -22,6 +22,6 @@ public class PeopleSwapiFeignAdapter implements PeopleSwapiService {
     @Override
     public PeopleDom findById(Long id) {
         val reponse = starWarsFeignClient.getPeopleById(id);
-        return peopleFeignToDomMapper.peopleFeignToDom(reponse.results());
+        return peopleFeignToDomMapper.peopleFeignToDom(reponse);
     }
 }

@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface PeopleService {
 
-    List<PeopleDom> findByName(String name, String order);
+    List<PeopleDom> findByName(String name, String orderBy, String order);
 
     PeopleDom findById(Long id);
 }
