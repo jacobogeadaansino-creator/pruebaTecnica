@@ -1,0 +1,322 @@
+openapi: 3.0.3
+info:
+  title: Blank API
+  version: 1.0.0
+  description: This is a simple API descriptor.
+paths:
+  /api/people:
+    summary: search people by id
+    get:
+      tags:
+        - people-controller
+      parameters:
+        -
+          name: name
+          description: name of the character to search
+          schema:
+            type: string
+          in: query
+          required: true
+        -
+          name: order
+          description: ''
+          schema:
+            enum:
+              - ASC
+              - DESC
+            type: string
+          in: query
+      responses:
+        '200':
+          $ref: '#/components/responses/PaginatedPeopleResponse'
+        '404':
+          description: nobody found
+        '500':
+          description: internal server error
+      operationId: findPeopleByName
+      summary: get people of universe by name.
+      description: wrapper to https://swapi.dev/api/people?name=.
+  /api/people/{id}:
+    summary: get people description by id
+    get:
+      tags:
+        - people-controller
+      parameters:
+        -
+          name: id
+          description: database id
+          schema:
+            format: int64
+            type: integer
+          in: path
+          required: true
+      responses:
+        '200':
+          $ref: '#/components/responses/PeopleResponse'
+        '404':
+          content:
+            application/json: {}
+          description: id not found
+        '500':
+          content:
+            application/json: {}
+          description: internal server error
+      operationId: findById
+      summary: get people of universe by id
+      description: wrapper to https://swapi.dev/api/people/{id}
+    parameters:
+      -
+        name: id
+        schema:
+          format: int64
+          type: integer
+        in: path
+        required: true
+  /api/planets/{id}:
+    get:
+      tags:
+        - planet-controller
+      responses:
+        '200':
+          $ref: '#/components/responses/PlanetResponse'
+      operationId: findPlanetById
+      summary: get plannet by id
+      description: 'get planet by id '
+    parameters:
+      -
+        name: id
+        schema:
+          format: int64
+          type: integer
+        in: path
+        required: true
+  /api/planets:
+    summary: search planet api
+    description: Search planet by name
+    get:
+      tags:
+        - planet-controller
+      responses:
+        '200':
+          $ref: '#/components/responses/PaginatedPlanetResponse'
+      operationId: findPlanetByName
+      summary: search planet by name
+      description: search wrapper planet by name
+    parameters:
+      -
+        name: name
+        description: ''
+        schema:
+          type: string
+        in: query
+        required: true
+components:
+  schemas:
+    PaginatedPeopleDto:
+      description: Paginated response for people search
+      required:
+        - page
+        - count
+        - next
+        - results
+      type: object
+      properties:
+        page:
+          format: int64
+          description: number of page
+          type: integer
+        count:
+          format: int64
+          description: count of results
+          type: integer
+        next:
+          description: next page link
+          type: string
+        results:
+          description: array of coincidences
+          type: array
+          items:
+            $ref: '#/components/schemas/PeopleDto'
+    PeopleDto:
+      description: ''
+      type: object
+      properties:
+        name:
+          description: name of the character
+          type: string
+          example: ''
+        height:
+          format: int64
+          description: character height
+          type: integer
+          example: ''
+        mass:
+          format: int64
+          description: character mass
+          type: integer
+          example: ''
+        hairColor:
+          description: character hair color
+          type: string
+          example: ''
+        skinColor:
+          description: character skin color
+          type: string
+          example: ''
+        eyeColor:
+          description: character eye color
+          type: string
+          example: ''
+        birthYear:
+          description: character birth year
+          type: string
+          example: ''
+        gender:
+          description: character gender
+          type: string
+          example: ''
+        homeWorld:
+          description: 'url to access to planet by id '
+          type: string
+          example: ''
+        films:
+          description: array of films that character appears , link to swapi
+          type: array
+          items:
+            type: string
+          example: ''
+        species:
+          description: TBC
+          type: string
+        vehicles:
+          description: array of links to used vehicles in the films url of swapi
+          type: array
+          items:
+            type: string
+          example: ''
+        starShips:
+          description: array of links of starShips used in the films link to swapi
+          type: array
+          items:
+            type: string
+          example: ''
+        created:
+          format: date-time
+          description: 'create date of register '
+          type: string
+          example: ''
+        edited:
+          format: date-time
+          description: last edited date
+          type: string
+          example: ''
+        url:
+          description: url of the character, url to technical test
+          type: string
+          example: ''
+    PaginatedPlanetDto:
+      description: ''
+      required:
+        - count
+        - page
+      type: object
+      properties:
+        count:
+          format: int64
+          description: ''
+          type: integer
+        page:
+          format: int64
+          description: ''
+          type: integer
+        next:
+          description: ''
+          type: string
+        results:
+          description: ''
+          type: array
+          items:
+            $ref: '#/components/schemas/PlanetDto'
+    PlanetDto:
+      description: Planet dto response
+      type: object
+      properties:
+        name:
+          description: ''
+          type: string
+          example: ''
+        rotationPeriod:
+          format: int64
+          description: planet rotation period
+          type: integer
+        orbitalPeriod:
+          format: int64
+          description: planet orbital period
+          type: integer
+        diameter:
+          format: int64
+          description: ''
+          type: integer
+        climate:
+          description: planet climate
+          type: string
+        gravity:
+          description: planet gravity
+          type: string
+        terrain:
+          description: planet terrain
+          type: string
+        surfaceWater:
+          description: planet water surface
+          type: string
+        population:
+          format: int64
+          description: planet estimated population
+          type: integer
+        residents:
+          description: array of links of people in the api
+          type: array
+          items:
+            type: string
+          example: ''
+        films:
+          description: films that the planet appears
+          type: array
+          items:
+            type: string
+        created:
+          format: date-time
+          description: ''
+          type: string
+        edited:
+          format: date-time
+          description: ''
+          type: string
+        url:
+          description: ''
+          type: string
+  responses:
+    PeopleResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PeopleDto'
+      description: ''
+    PaginatedPeopleResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PaginatedPeopleDto'
+      description: ''
+    PaginatedPlanetResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PaginatedPlanetDto'
+      description: ''
+    PlanetResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PlanetDto'
+      description: ''
