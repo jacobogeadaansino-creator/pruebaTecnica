@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: pruebaCapitole
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            connectTimeout: 10000
+            readTimeout: 10000
+base:
+  url: https://swapi.dev/api
+logging:
+  level:
+    root: trace
+    org.springframework.cloud.openfeign: DEBUG
+    feign: DEBUG
+server:
+  port: 6969
