@@ -24,7 +24,7 @@ public class PlanetControllerApiImpl implements PlanetControllerApi {
 
     @Override
     public ResponseEntity<PaginatedPlanetDto> findPlanetByName(String name, OrderBy orderBy, OrderDirection order, Integer page) {
-        val baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+        val baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString() + "/api";
         val response = planetService.findByName(name,
                 orderBy != null ? orderBy.getValue() : "asc",
                 order != null ? order.getValue() : null,
@@ -35,7 +35,7 @@ public class PlanetControllerApiImpl implements PlanetControllerApi {
     @Override
     public ResponseEntity<PlanetDto> findPlanetById(Integer id) {
         val response = planetService.findById(id);
-        val baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+        val baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString() + "/api";
         return ResponseEntity.ok(planetDomDtoMapper.toDtoPlanet(response, baseUrl));
     }
 
