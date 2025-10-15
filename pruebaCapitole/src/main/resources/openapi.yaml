@@ -29,6 +29,14 @@ paths:
             $ref: '#/components/schemas/OrderDirection'
           required: false
           in: query
+        - name: page
+          description: number of page
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+          in: query
+          required: false
       responses:
         '200':
           $ref: '#/components/responses/PaginatedPeopleResponse'
@@ -39,7 +47,7 @@ paths:
       operationId: findPeopleByName
       summary: get people of universe by name.
       description: wrapper to https://swapi.dev/api/people?name=.
-  /api/people/{id}:
+  /api/people/{id}/:
     summary: get people description by id
     get:
       tags:
@@ -49,7 +57,6 @@ paths:
           name: id
           description: database id
           schema:
-            format: int64
             type: integer
           in: path
           required: true
@@ -75,7 +82,7 @@ paths:
           type: integer
         in: path
         required: true
-  /api/planets/{id}:
+  /api/planets/{id}/:
     get:
       tags:
         - planet-controller
@@ -89,7 +96,6 @@ paths:
       -
         name: id
         schema:
-          format: int64
           type: integer
         in: path
         required: true
@@ -113,6 +119,26 @@ paths:
           type: string
         in: query
         required: true
+      - name: orderBy
+        description: field to order the results
+        schema:
+          $ref: '#/components/schemas/OrderBy'
+        required: false
+        in: query
+      - name: order
+        description: ''
+        schema:
+          $ref: '#/components/schemas/OrderDirection'
+        required: false
+        in: query
+      - name: page
+        description: number of page
+        schema:
+          type: integer
+          default: 1
+          minimum: 1
+        in: query
+        required: false
 components:
   schemas:
     OrderBy:
@@ -130,23 +156,25 @@ components:
     PaginatedPeopleDto:
       description: Paginated response for people search
       required:
-        - page
-        - count
-        - next
+        - totalPages
+        - currentPage
+        - totalItems
         - results
+        - pageSize
       type: object
       properties:
-        page:
-          format: int64
+        currentPage:
           description: number of page
           type: integer
-        count:
-          format: int64
+        totalItems:
           description: count of results
           type: integer
-        next:
-          description: next page link
-          type: string
+        totalPages:
+          type: integer
+          description: total of pages
+        pageSize:
+          description: size of the page
+          type: integer
         results:
           description: array of coincidences
           type: array
@@ -161,14 +189,12 @@ components:
           type: string
           example: ''
         height:
-          format: int64
           description: character height
-          type: integer
+          type: string
           example: ''
         mass:
-          format: int64
           description: character mass
-          type: integer
+          type: String
           example: ''
         hairColor:
           description: character hair color
@@ -202,7 +228,9 @@ components:
           example: ''
         species:
           description: TBC
-          type: string
+          type: array
+          items:
+            type: string
         vehicles:
           description: array of links to used vehicles in the films url of swapi
           type: array
@@ -230,25 +258,29 @@ components:
           type: string
           example: ''
     PaginatedPlanetDto:
-      description: ''
+      description: Paginated response for people search
       required:
-        - count
-        - page
+        - totalPages
+        - currentPage
+        - totalItems
+        - results
+        - pageSize
       type: object
       properties:
-        count:
-          format: int64
-          description: ''
+        currentPage:
+          description: number of page
           type: integer
-        page:
-          format: int64
-          description: ''
+        totalItems:
+          description: count of results
           type: integer
-        next:
-          description: ''
-          type: string
+        totalPages:
+          type: integer
+          description: total of pages
+        pageSize:
+          description: size of the page
+          type: integer
         results:
-          description: ''
+          description: array of coincidences
           type: array
           items:
             $ref: '#/components/schemas/PlanetDto'
@@ -269,9 +301,8 @@ components:
           description: planet orbital period
           type: integer
         diameter:
-          format: int64
           description: ''
-          type: integer
+          type: String
         climate:
           description: planet climate
           type: string
@@ -285,9 +316,8 @@ components:
           description: planet water surface
           type: string
         population:
-          format: int64
           description: planet estimated population
-          type: integer
+          type: string
         residents:
           description: array of links of people in the api
           type: array

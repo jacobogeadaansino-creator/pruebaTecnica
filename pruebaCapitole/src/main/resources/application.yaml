@@ -12,8 +12,9 @@ base:
   url: https://swapi.dev/api
 logging:
   level:
-    root: trace
+    root: info
     org.springframework.cloud.openfeign: DEBUG
     feign: DEBUG
 server:
   port: 6969
+  url: http://localhost:6969/

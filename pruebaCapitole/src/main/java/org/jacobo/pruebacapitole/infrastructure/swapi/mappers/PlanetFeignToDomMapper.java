@@ -1,6 +1,8 @@
 package org.jacobo.pruebacapitole.infrastructure.swapi.mappers;
 
 import org.jacobo.pruebacapitole.domain.model.planets.PlanetDom;
+import org.jacobo.pruebacapitole.domain.model.planets.PlanetResultDom;
+import org.jacobo.pruebacapitole.infrastructure.swapi.dto.planets.PlanetFeignDto;
 import org.jacobo.pruebacapitole.infrastructure.swapi.dto.planets.PlanetResultFeignDto;
 import org.mapstruct.Mapper;
 
@@ -9,7 +11,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface PlanetFeignToDomMapper {
 
-    PlanetDom planetFeignToDom(PlanetResultFeignDto planetResultFeignDto);
+    PlanetDom planetFeignToDom(PlanetFeignDto planetResultFeignDto);
 
-    List<PlanetDom> planetFeignListToDom(List<PlanetResultFeignDto> planetResultFeignDtos);
+    PlanetResultDom planetFeignResultToDom(PlanetResultFeignDto planetResultFeignDtos);
 }

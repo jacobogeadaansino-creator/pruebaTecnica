@@ -21,8 +21,12 @@ public interface StarWarsFeignClient {
     @GetMapping(path = "/people/", produces = "application/json")
     PeopleFeignDto getPeopleByPage(@RequestParam(name = "page") int page);
 
+    @GetMapping(path = "/people/", produces = "application/json")
+    PeopleFeignDto getPeopleByNameAndPage(@RequestParam(name = "search") String search, @RequestParam(name = "page") int page);
+
     @GetMapping(path = "/planets/", produces = "application/json")
     PlanetFeignDto getPlanets();
+
 
     @GetMapping(path = "/planets/", produces = "application/json")
     PlanetFeignDto getPlanetsByPage(@RequestParam(name = "page") int page);
@@ -33,6 +37,10 @@ public interface StarWarsFeignClient {
     @GetMapping(path = "/people/{id}", produces = "application/json")
     PeopleResultFeignDto getPeopleById(@PathVariable(name = "id") Long id);
 
+    @GetMapping(path = "/people/", produces = "application/json")
+    PeopleFeignDto getPeopleByName(@RequestParam(name = "search") String name);
 
+    @GetMapping(path = "/planets/", produces = "application/json")
+    PlanetFeignDto getPlanetByName(@RequestParam(name = "search") String name);
 
 }
