@@ -2,15 +2,12 @@ package org.jacobo.pruebacapitole.infrastructure.service.cache.planet;
 
 import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
-import org.jacobo.pruebacapitole.domain.model.people.PeopleResultDom;
 import org.jacobo.pruebacapitole.domain.model.planets.PlanetResultDom;
-import org.jacobo.pruebacapitole.domain.service.cache.people.PeopleIdCache;
 import org.jacobo.pruebacapitole.domain.service.cache.planet.PlanetIdCache;
 import org.mapdb.HTreeMap;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
@@ -31,7 +28,7 @@ public class PlanetIdCacheImpl implements PlanetIdCache {
 
     @Override
     public CompletableFuture<Void> populateCache() {
-        return CompletableFuture.runAsync(() -> {
+        return CompletableFuture.runAsync(() ->
             planetNameCache.values().forEach(value -> {
                     String url = value.getUrl();
                     if (!Strings.isNullOrEmpty(url)) {
@@ -45,8 +42,8 @@ public class PlanetIdCacheImpl implements PlanetIdCache {
                             log.error("Error parsing ID from URL: {} error {}", url, e.getMessage());
                         }
                     }
-                });
-        });
+                })
+        );
     }
 
     @Override
@@ -54,8 +51,4 @@ public class PlanetIdCacheImpl implements PlanetIdCache {
         return planetIdCache.containsKey(id) ? Optional.of(planetIdCache.get(id)): Optional.empty();
     }
 
-    @Override
-    public boolean containsId(Integer id) {
-        return planetIdCache.containsKey(id);
-    }
 }

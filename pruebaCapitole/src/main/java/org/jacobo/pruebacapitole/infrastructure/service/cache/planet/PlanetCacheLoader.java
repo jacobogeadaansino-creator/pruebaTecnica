@@ -8,7 +8,6 @@ import org.jacobo.pruebacapitole.domain.model.planets.PlanetResultDom;
 import org.jacobo.pruebacapitole.domain.service.PlanetSwapiService;
 import org.jacobo.pruebacapitole.domain.service.cache.CacheLoaderPort;
 import org.jacobo.pruebacapitole.domain.service.cache.NameCache;
-import org.jacobo.pruebacapitole.domain.service.cache.people.PeopleIdCache;
 import org.jacobo.pruebacapitole.domain.service.cache.planet.PlanetIdCache;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -28,7 +27,7 @@ public class PlanetCacheLoader implements CacheLoaderPort {
     private final NameCache<PlanetResultDom> planetCache;
     @Qualifier("appThreadPool")
     private final ExecutorService executor;
-    private final PlanetIdCache planetIdCache;;
+    private final PlanetIdCache planetIdCache;
 
     @PostConstruct
     public void loadCache() {
@@ -50,9 +49,9 @@ public class PlanetCacheLoader implements CacheLoaderPort {
             CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
                 val dom = planetSwapiService.getPlanetByPage(currentPage);
                 if (dom != null && dom.results() != null && !dom.results().isEmpty()) {
-                    dom.results().forEach(singleResult -> {
-                        planetCache.put(singleResult.getName().toLowerCase(), singleResult);
-                    });
+                    dom.results().forEach(singleResult ->
+                        planetCache.put(singleResult.getName().toLowerCase(), singleResult)
+                    );
                 }
                 return;
             }, executor);
@@ -71,9 +70,9 @@ public class PlanetCacheLoader implements CacheLoaderPort {
     private void cacheFirstPageResults() {
         val firstPage = planetSwapiService.getPlanet();
         if (firstPage != null && firstPage.results() != null && !firstPage.results().isEmpty()) {
-            firstPage.results().forEach(singleResult -> {
-                planetCache.put(singleResult.getName().toLowerCase(), singleResult);
-            });
+            firstPage.results().forEach(singleResult ->
+                planetCache.put(singleResult.getName().toLowerCase(), singleResult)
+            );
         }
     }
 

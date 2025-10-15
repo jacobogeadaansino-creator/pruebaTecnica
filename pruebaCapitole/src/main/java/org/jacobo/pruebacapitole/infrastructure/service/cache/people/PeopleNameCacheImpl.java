@@ -28,11 +28,6 @@ public class PeopleNameCacheImpl implements NameCache<PeopleResultDom> {
         peopleNameCache.put(name, json);
     }
 
-    @Override
-    public void replace(String name, PeopleResultDom json) {
-        peopleNameCache.replace(name, json);
-    }
-
     public boolean containsKey(String name) {
         return peopleNameCache.containsKey(name);
     }

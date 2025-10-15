@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.jacobo.pruebacapitole.application.service.commons.EntitySorter;
-import org.jacobo.pruebacapitole.application.service.commons.GenericEntitySorter;
 import org.jacobo.pruebacapitole.domain.exception.NotFoundException;
 import org.jacobo.pruebacapitole.domain.model.people.PeopleDom;
 import org.jacobo.pruebacapitole.domain.model.people.PeopleResultDom;
@@ -16,8 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 
 @Service
 @Slf4j
@@ -44,12 +41,6 @@ public class PeopleServiceImpl implements PeopleService {
             result = swapiResponse.results();
             peopleCacheRepository.save(name, swapiResponse.results().get(0));
         }
-        Map<String, Function<PeopleResultDom, Comparable>> peopleFields = Map.of(
-                "created", PeopleResultDom::getCreated,
-                "name", PeopleResultDom::getName
-        );
-        EntitySorter<PeopleResultDom> peopleSorter = new GenericEntitySorter<>(peopleFields);
-
         peopleSorter.sort(result, orderBy, order);
 
         int startIndex = (page - 1) * PAGE_SIZE;

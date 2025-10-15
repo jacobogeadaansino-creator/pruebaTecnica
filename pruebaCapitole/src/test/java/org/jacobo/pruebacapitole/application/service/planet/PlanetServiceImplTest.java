@@ -27,19 +27,20 @@ class PlanetServiceImplTest {
     @Mock
     private PlanetCacheRepository planetCacheRepository;
 
-    private EntitySorter<PlanetResultDom> planetSorter;
     private PlanetServiceImpl planetService;
     private PlanetResultDom tatooine;
     private PlanetResultDom alderaan;
     private PlanetResultDom hoth;
+    private EntitySorter<PlanetResultDom> planetSorter;
 
     @BeforeEach
     void setUp() {
+        // Crear sorter real con los campos de ordenación
         planetSorter = new GenericEntitySorter<>(Map.of(
                 "created", PlanetResultDom::getCreated,
                 "name", PlanetResultDom::getName
         ));
-        planetService = new PlanetServiceImpl(planetSwapiService, planetCacheRepository);
+        planetService = new PlanetServiceImpl(planetSwapiService, planetCacheRepository, planetSorter);
 
         tatooine = new PlanetResultDom(
                 "Tatooine", null, null, null, null, null, null, null, null,

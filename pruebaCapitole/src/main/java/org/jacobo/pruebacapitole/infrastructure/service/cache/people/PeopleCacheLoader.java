@@ -26,7 +26,7 @@ public class PeopleCacheLoader implements CacheLoaderPort {
     private final NameCache<PeopleResultDom> peopleCache;
     @Qualifier("appThreadPool")
     private final ExecutorService executor;
-    private final PeopleIdCache peopleIdCache;;
+    private final PeopleIdCache peopleIdCache;
 
     @PostConstruct
     public void loadCache() {
@@ -48,9 +48,9 @@ public class PeopleCacheLoader implements CacheLoaderPort {
                 CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
                         val dom = peopleSwapiService.getPeopleByPage(currentPage);
                         if (dom != null && dom.results() != null && !dom.results().isEmpty()) {
-                            dom.results().forEach(singleResult -> {
-                                peopleCache.put(singleResult.getName().toLowerCase(), singleResult);
-                            });
+                            dom.results().forEach(singleResult ->
+                                peopleCache.put(singleResult.getName().toLowerCase(), singleResult)
+                            );
                         }
                         return;
                 }, executor);
@@ -69,9 +69,9 @@ public class PeopleCacheLoader implements CacheLoaderPort {
     private void cacheFirstPageResults() {
         val firstPage = peopleSwapiService.getPeople();
         if (firstPage != null && firstPage.results() != null && !firstPage.results().isEmpty()) {
-            firstPage.results().forEach(singleResult -> {
-                peopleCache.put(singleResult.getName().toLowerCase(), singleResult);
-            });
+            firstPage.results().forEach(singleResult ->
+                peopleCache.put(singleResult.getName().toLowerCase(), singleResult)
+            );
         }
     }
 }

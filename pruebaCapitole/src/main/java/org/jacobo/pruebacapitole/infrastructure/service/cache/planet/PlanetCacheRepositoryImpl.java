@@ -17,10 +17,6 @@ public class PlanetCacheRepositoryImpl implements PlanetCacheRepository {
 
     private final NameCache<PlanetResultDom> planetNameCache;
     private final PlanetIdCache planetIdCache;
-    @Override
-    public Optional<PlanetResultDom> findByNameExact(String name) {
-        return Optional.empty();
-    }
 
     @Override
     public List<PlanetResultDom> findByName(String name) {
@@ -30,12 +26,6 @@ public class PlanetCacheRepositoryImpl implements PlanetCacheRepository {
                 .flatMap(key -> planetNameCache.find(key).stream()).collect(Collectors.toList());
     }
 
-    @Override
-    public List<PlanetResultDom> findAll() {
-        return  planetNameCache.getAllKeys().stream()
-                .flatMap(key ->  planetNameCache.find(key).stream())
-                .collect(Collectors.toList());
-    }
     @Override
     public Optional<PlanetResultDom> findById(Integer id) {
         return planetIdCache.getById(id);

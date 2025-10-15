@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.jacobo.pruebacapitole.application.service.commons.EntitySorter;
-import org.jacobo.pruebacapitole.application.service.commons.GenericEntitySorter;
 import org.jacobo.pruebacapitole.domain.exception.NotFoundException;
 import org.jacobo.pruebacapitole.domain.model.planets.PlanetDom;
 import org.jacobo.pruebacapitole.domain.model.planets.PlanetResultDom;
@@ -16,8 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +23,7 @@ public class PlanetServiceImpl  implements PlanetService {
 
     private final PlanetSwapiService planetSwapiService;
     private final PlanetCacheRepository planetCacheRepository;
+    private final EntitySorter<PlanetResultDom> planetSorter;
     private static final int PAGE_SIZE = 15;
 
     @Override
@@ -43,13 +41,8 @@ public class PlanetServiceImpl  implements PlanetService {
             result = swapiResponse.results();
             planetCacheRepository.save(name, swapiResponse.results().get(0));
         }
-        Map<String, Function<PlanetResultDom, Comparable>> peopleFields = Map.of(
-                "created", PlanetResultDom::getCreated,
-                "name", PlanetResultDom::getName
-        );
-        EntitySorter<PlanetResultDom> planetsorter = new GenericEntitySorter<>(peopleFields);
 
-        planetsorter.sort(result, orderBy, order);
+        planetSorter.sort(result, orderBy, order);
 
         int startIndex = (page - 1) * PAGE_SIZE;
         if (startIndex >= result.size()) {

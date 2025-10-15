@@ -20,17 +20,12 @@ public class PlanetNameCacheImpl implements NameCache<PlanetResultDom> {
 
     @Override
     public Optional<PlanetResultDom> find(String name) {
-        return planetNameCache.containsKey(name) ? Optional.of(planetNameCache.get(name)) : Optional.empty();
+        return planetNameCache.containsKey(name) ? Optional.ofNullable(planetNameCache.get(name)) : Optional.empty();
     }
 
     @Override
     public void put(String name, PlanetResultDom json) {
         planetNameCache.put(name, json);
-    }
-
-    @Override
-    public void replace(String name, PlanetResultDom json) {
-        planetNameCache.replace(name, json);
     }
 
     public boolean containsKey(String name) {

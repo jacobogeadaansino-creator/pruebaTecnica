@@ -29,8 +29,8 @@ public class PeopleIdCacheImpl implements PeopleIdCache {
 
     @Override
     public CompletableFuture<Void> populateCache() {
-        return CompletableFuture.runAsync(() -> {
-            peopleCache.values().forEach(value -> {
+        return CompletableFuture.runAsync(() ->
+            peopleCache.values().forEach(value ->
                 value.forEach(people -> {
                     String url = people.getUrl();
                     if (!Strings.isNullOrEmpty(url)) {
@@ -44,18 +44,14 @@ public class PeopleIdCacheImpl implements PeopleIdCache {
                             log.error("Error parsing ID from URL: {} error {}", url, e.getMessage());
                         }
                     }
-                });
-            });
-        });
+                })
+            )
+        );
     }
 
     @Override
     public Optional<PeopleResultDom> getById(Integer id) {
-        return peopleIdCache.containsKey(id) ? Optional.of(peopleIdCache.get(id)): Optional.empty();
+        return peopleIdCache.containsKey(id) ? Optional.ofNullable(peopleIdCache.get(id)): Optional.empty();
     }
 
-    @Override
-    public boolean containsId(Integer id) {
-        return peopleIdCache.containsKey(id);
-    }
 }
