@@ -45,7 +45,7 @@
    - Documentación OpenAPI: `http://miservidor.com:6969/api-docs`
 
 ## Arquitectura Hexagonal (resumen)
-Este proyecto ya sigue una estructura por capas (domain, application, infrastructure). Para reforzar el enfoque hexagonal y facilitar el mantenimiento, consulta el plan detallado en `HEXAGONAL_REFACTOR_PLAN.md`, que propone:
+Este proyecto ya sigue una estructura por capas (domain, application, infrastructure). Para reforzar el enfoque hexagonal y facilitar el mantenimiento:
 - Puertos primarios/secundarios claros y consistentes (nomenclatura `*Port`).
 - Controladores que dependan de puertos de aplicación (use cases), no de implementaciones concretas.
 - Aislar framework y DTOs en infraestructura, dejando dominio y aplicación lo más puros posible.
