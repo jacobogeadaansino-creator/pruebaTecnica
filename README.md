@@ -6,7 +6,7 @@
 - Docker
 
 ## Servicio
-- El servicio esta disponible en http://84.235.232.186:6969/swagger-ui
+- El servicio esta disponible en http://84.235.231.46/:6969/swagger-ui
 
 ## Imagen docker
 
@@ -36,7 +36,7 @@
 
 1. Ejecuta el contenedor Docker exponiendo el puerto 6969 y configurando la URL pública del servidor:
    ```bash
-   docker run -p 6969:6969 -e SERVER_URL=http://miservidor.com:6969 jacobogeada/prueba-capitole:0.0.2
+   docker run -p 6969:6969 -e SERVER_URL=http://miservidor.com:6969 jacobogeada/prueba-capitole:0.0.3
    ```
    - Cambia `http://miservidor.com:6969` por la URL pública de tu servidor.
 

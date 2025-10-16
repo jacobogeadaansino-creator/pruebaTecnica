@@ -293,13 +293,11 @@ components:
           type: string
           example: ''
         rotationPeriod:
-          format: int64
           description: planet rotation period
-          type: integer
+          type: string
         orbitalPeriod:
-          format: int64
           description: planet orbital period
-          type: integer
+          type: string
         diameter:
           description: ''
           type: String
