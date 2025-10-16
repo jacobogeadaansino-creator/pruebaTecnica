@@ -6,7 +6,7 @@
 - Docker
 
 ## Servicio
-- El servicio esta disponible en http://84.235.231.46/:6969/swagger-ui
+- El servicio esta disponible en http://84.235.231.46:6969/swagger-ui.html
 
 ## Imagen docker
 
