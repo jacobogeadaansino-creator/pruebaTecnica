@@ -5,13 +5,13 @@ import lombok.val;
 import org.jacobo.pruebacapitole.domain.exception.NotFoundException;
 import org.jacobo.pruebacapitole.domain.model.planets.PlanetDom;
 import org.jacobo.pruebacapitole.domain.model.planets.PlanetResultDom;
-import org.jacobo.pruebacapitole.domain.service.PlanetSwapiService;
+import org.jacobo.pruebacapitole.domain.service.PlanetSwapiPort;
 import org.jacobo.pruebacapitole.infrastructure.swapi.mappers.PlanetFeignToDomMapper;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class PlanetSwapiFeignAdapter implements PlanetSwapiService {
+public class PlanetSwapiFeignAdapter implements PlanetSwapiPort {
 
     private final StarWarsFeignClient starWarsFeignClient;
     private final PlanetFeignToDomMapper planetFeignToDomMapper;

@@ -3,7 +3,7 @@ package org.jacobo.pruebacapitole.domain.service;
 import org.jacobo.pruebacapitole.domain.model.planets.PlanetDom;
 import org.jacobo.pruebacapitole.domain.model.planets.PlanetResultDom;
 
-public interface PlanetSwapiService {
+public interface PlanetSwapiPort {
 
     PlanetDom findByName(String name);
 

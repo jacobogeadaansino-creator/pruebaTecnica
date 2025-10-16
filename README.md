@@ -37,6 +37,13 @@
    - Swagger UI: `http://miservidor.com:6969/swagger-ui.html`
    - Documentación OpenAPI: `http://miservidor.com:6969/api-docs`
 
+## Arquitectura Hexagonal (resumen)
+Este proyecto ya sigue una estructura por capas (domain, application, infrastructure). Para reforzar el enfoque hexagonal y facilitar el mantenimiento, consulta el plan detallado en `HEXAGONAL_REFACTOR_PLAN.md`, que propone:
+- Puertos primarios/secundarios claros y consistentes (nomenclatura `*Port`).
+- Controladores que dependan de puertos de aplicación (use cases), no de implementaciones concretas.
+- Aislar framework y DTOs en infraestructura, dejando dominio y aplicación lo más puros posible.
+- Estrategia de tests alineada (dobles de puertos en unit tests, tests de adaptadores por separado).
+
 ## Notas adicionales
 - El archivo de configuración `application.yaml` se encuentra fuera del JAR y es copiado al contenedor Docker en `/app/config/application.yaml`.
 - Los logs de la aplicación se almacenan en `${HOME}/app/log/pruebatecnica.log` dentro del contenedor.

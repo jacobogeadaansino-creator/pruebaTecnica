@@ -3,7 +3,7 @@ package org.jacobo.pruebacapitole.infrastructure.service.cache.planet;
 import lombok.RequiredArgsConstructor;
 import org.jacobo.pruebacapitole.domain.model.planets.PlanetResultDom;
 import org.jacobo.pruebacapitole.domain.service.cache.NameCache;
-import org.jacobo.pruebacapitole.domain.service.cache.planet.PlanetCacheRepository;
+import org.jacobo.pruebacapitole.domain.service.cache.planet.PlanetCachePort;
 import org.jacobo.pruebacapitole.domain.service.cache.planet.PlanetIdCache;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class PlanetCacheRepositoryImpl implements PlanetCacheRepository {
+public class PlanetCacheRepositoryImpl implements PlanetCachePort {
 
     private final NameCache<PlanetResultDom> planetNameCache;
     private final PlanetIdCache planetIdCache;

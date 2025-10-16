@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.jacobo.pruebacapitole.domain.model.people.PeopleResultDom;
-import org.jacobo.pruebacapitole.domain.service.PeopleSwapiService;
+import org.jacobo.pruebacapitole.domain.service.PeopleSwapiPort;
 import org.jacobo.pruebacapitole.domain.service.cache.CacheLoaderPort;
 import org.jacobo.pruebacapitole.domain.service.cache.NameCache;
 import org.jacobo.pruebacapitole.domain.service.cache.people.PeopleIdCache;
@@ -22,7 +22,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 @Component("peopleCacheLoader")
 @RequiredArgsConstructor
 public class PeopleCacheLoader implements CacheLoaderPort {
-    private final PeopleSwapiService peopleSwapiService;
+    private final PeopleSwapiPort peopleSwapiPort;
     private final NameCache<PeopleResultDom> peopleCache;
     @Qualifier("appThreadPool")
     private final ExecutorService executor;
@@ -30,7 +30,7 @@ public class PeopleCacheLoader implements CacheLoaderPort {
 
     @PostConstruct
     public void loadCache() {
-            val firstPage = peopleSwapiService.getPeople();
+            val firstPage = peopleSwapiPort.getPeople();
             if (firstPage == null || firstPage.results() == null || firstPage.results().isEmpty()) {
                 log.error("not found results check with swapi");
                 return;
@@ -46,7 +46,7 @@ public class PeopleCacheLoader implements CacheLoaderPort {
             for (int page = 2; page <= totalPages; page++) {
                 final int currentPage = page;
                 CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
-                        val dom = peopleSwapiService.getPeopleByPage(currentPage);
+                        val dom = peopleSwapiPort.getPeopleByPage(currentPage);
                         if (dom != null && dom.results() != null && !dom.results().isEmpty()) {
                             dom.results().forEach(singleResult ->
                                 peopleCache.put(singleResult.getName().toLowerCase(), singleResult)
@@ -67,7 +67,7 @@ public class PeopleCacheLoader implements CacheLoaderPort {
     }
 
     private void cacheFirstPageResults() {
-        val firstPage = peopleSwapiService.getPeople();
+        val firstPage = peopleSwapiPort.getPeople();
         if (firstPage != null && firstPage.results() != null && !firstPage.results().isEmpty()) {
             firstPage.results().forEach(singleResult ->
                 peopleCache.put(singleResult.getName().toLowerCase(), singleResult)

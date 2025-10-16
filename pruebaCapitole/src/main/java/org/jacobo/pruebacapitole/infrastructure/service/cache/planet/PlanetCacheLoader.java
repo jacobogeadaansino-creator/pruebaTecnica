@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.jacobo.pruebacapitole.domain.model.planets.PlanetResultDom;
-import org.jacobo.pruebacapitole.domain.service.PlanetSwapiService;
+import org.jacobo.pruebacapitole.domain.service.PlanetSwapiPort;
 import org.jacobo.pruebacapitole.domain.service.cache.CacheLoaderPort;
 import org.jacobo.pruebacapitole.domain.service.cache.NameCache;
 import org.jacobo.pruebacapitole.domain.service.cache.planet.PlanetIdCache;
@@ -23,7 +23,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 @RequiredArgsConstructor
 public class PlanetCacheLoader implements CacheLoaderPort {
 
-    private final PlanetSwapiService planetSwapiService;
+    private final PlanetSwapiPort planetSwapiPort;
     private final NameCache<PlanetResultDom> planetCache;
     @Qualifier("appThreadPool")
     private final ExecutorService executor;
@@ -31,7 +31,7 @@ public class PlanetCacheLoader implements CacheLoaderPort {
 
     @PostConstruct
     public void loadCache() {
-        val firstPage = planetSwapiService.getPlanet();
+        val firstPage = planetSwapiPort.getPlanet();
         if (firstPage == null || firstPage.results() == null || firstPage.results().isEmpty()) {
             log.error("not found results check with swapi");
             return;
@@ -47,7 +47,7 @@ public class PlanetCacheLoader implements CacheLoaderPort {
         for (int page = 2; page <= totalPages; page++) {
             final int currentPage = page;
             CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
-                val dom = planetSwapiService.getPlanetByPage(currentPage);
+                val dom = planetSwapiPort.getPlanetByPage(currentPage);
                 if (dom != null && dom.results() != null && !dom.results().isEmpty()) {
                     dom.results().forEach(singleResult ->
                         planetCache.put(singleResult.getName().toLowerCase(), singleResult)
@@ -68,7 +68,7 @@ public class PlanetCacheLoader implements CacheLoaderPort {
     }
 
     private void cacheFirstPageResults() {
-        val firstPage = planetSwapiService.getPlanet();
+        val firstPage = planetSwapiPort.getPlanet();
         if (firstPage != null && firstPage.results() != null && !firstPage.results().isEmpty()) {
             firstPage.results().forEach(singleResult ->
                 planetCache.put(singleResult.getName().toLowerCase(), singleResult)

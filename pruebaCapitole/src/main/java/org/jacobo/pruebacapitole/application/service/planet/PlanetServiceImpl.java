@@ -9,8 +9,8 @@ import org.jacobo.pruebacapitole.application.service.commons.EntitySorter;
 import org.jacobo.pruebacapitole.domain.exception.NotFoundException;
 import org.jacobo.pruebacapitole.domain.model.planets.PlanetDom;
 import org.jacobo.pruebacapitole.domain.model.planets.PlanetResultDom;
-import org.jacobo.pruebacapitole.domain.service.PlanetSwapiService;
-import org.jacobo.pruebacapitole.domain.service.cache.planet.PlanetCacheRepository;
+import org.jacobo.pruebacapitole.domain.service.PlanetSwapiPort;
+import org.jacobo.pruebacapitole.domain.service.cache.planet.PlanetCachePort;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -21,8 +21,8 @@ import java.util.List;
 @Slf4j
 public class PlanetServiceImpl  implements PlanetService {
 
-    private final PlanetSwapiService planetSwapiService;
-    private final PlanetCacheRepository planetCacheRepository;
+    private final PlanetSwapiPort planetSwapiPort;
+    private final PlanetCachePort planetCachePort;
     private final EntitySorter<PlanetResultDom> planetSorter;
     private static final int PAGE_SIZE = 15;
 
@@ -31,15 +31,15 @@ public class PlanetServiceImpl  implements PlanetService {
         if(Strings.isNullOrEmpty(order)){
             order = "asc";
         }
-        List<PlanetResultDom> result = planetCacheRepository.findByName(name);
+        List<PlanetResultDom> result = planetCachePort.findByName(name);
         if(result.isEmpty()){
             log.info("cache fails, going to api");
-            val swapiResponse = planetSwapiService.findByName(name);
+            val swapiResponse = planetSwapiPort.findByName(name);
             if (swapiResponse == null || swapiResponse.results() == null || swapiResponse.results().isEmpty()) {
                 throw new NotFoundException(String.format("There is not result for name %s", name));
             }
             result = swapiResponse.results();
-            planetCacheRepository.save(name, swapiResponse.results().get(0));
+            planetCachePort.save(name, swapiResponse.results().get(0));
         }
 
         planetSorter.sort(result, orderBy, order);
@@ -56,14 +56,14 @@ public class PlanetServiceImpl  implements PlanetService {
 
     @Override
     public PlanetResultDom findById(Integer id) {
-        val cacheResult =  planetCacheRepository.findById(id);
+        val cacheResult =  planetCachePort.findById(id);
         if(cacheResult.isEmpty()){
             log.error("Cache fails, going to api" );
-            val response = planetSwapiService.findById(Long.valueOf(id));
+            val response = planetSwapiPort.findById(Long.valueOf(id));
             if(response == null) {
                 throw new NotFoundException(String.format("There is not result for id %d", id));
             }
-            planetCacheRepository.save(response.getName(), response);
+            planetCachePort.save(response.getName(), response);
             return response;
         }
         return cacheResult.get();

@@ -3,8 +3,8 @@ package org.jacobo.pruebacapitole.application.service.people;
 import org.jacobo.pruebacapitole.domain.exception.NotFoundException;
 import org.jacobo.pruebacapitole.domain.model.people.PeopleDom;
 import org.jacobo.pruebacapitole.domain.model.people.PeopleResultDom;
-import org.jacobo.pruebacapitole.domain.service.PeopleSwapiService;
-import org.jacobo.pruebacapitole.domain.service.cache.people.PeopleCacheRepository;
+import org.jacobo.pruebacapitole.domain.service.PeopleSwapiPort;
+import org.jacobo.pruebacapitole.domain.service.cache.people.PeopleCachePort;
 import org.jacobo.pruebacapitole.application.service.commons.EntitySorter;
 import org.jacobo.pruebacapitole.application.service.commons.GenericEntitySorter;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,9 +23,9 @@ import static org.mockito.Mockito.*;
 class PeopleServiceImplTest {
 
     @Mock
-    private PeopleSwapiService peopleSwapiService;
+    private PeopleSwapiPort peopleSwapiPort;
     @Mock
-    private PeopleCacheRepository peopleCacheRepository;
+    private PeopleCachePort peopleCachePort;
 
     private EntitySorter<PeopleResultDom> peopleSorter;
     private PeopleServiceImpl peopleService;
@@ -39,7 +39,7 @@ class PeopleServiceImplTest {
                 "created", PeopleResultDom::getCreated,
                 "name", PeopleResultDom::getName
         ));
-        peopleService = new PeopleServiceImpl(peopleSwapiService, peopleSorter, peopleCacheRepository);
+        peopleService = new PeopleServiceImpl(peopleSwapiPort, peopleSorter, peopleCachePort);
 
         luke = new PeopleResultDom(
                 "Luke", null, null, null, null, null, null, null, null,
@@ -61,7 +61,7 @@ class PeopleServiceImplTest {
     @Test
     void findByName_cacheHit_orderByNameAsc() {
         List<PeopleResultDom> people = Arrays.asList(leia, luke, han);
-        when(peopleCacheRepository.findByName("all")).thenReturn(people);
+        when(peopleCachePort.findByName("all")).thenReturn(people);
         PeopleDom result = peopleService.findByName("all", "name", "asc", 1);
         assertEquals(3L, result.count());
         assertEquals("Han", result.results().get(0).getName());
@@ -72,7 +72,7 @@ class PeopleServiceImplTest {
     @Test
     void findByName_cacheHit_orderByCreatedDesc() {
         List<PeopleResultDom> people = Arrays.asList(leia, luke, han);
-        when(peopleCacheRepository.findByName("all")).thenReturn(people);
+        when(peopleCachePort.findByName("all")).thenReturn(people);
         PeopleDom result = peopleService.findByName("all", "created", "desc", 1);
         assertEquals(3L, result.count());
         assertEquals("Leia", result.results().get(0).getName());
@@ -83,7 +83,7 @@ class PeopleServiceImplTest {
     @Test
     void findByName_cacheHit_orderByNull() {
         List<PeopleResultDom> people = Arrays.asList(leia, luke, han);
-        when(peopleCacheRepository.findByName("all")).thenReturn(people);
+        when(peopleCachePort.findByName("all")).thenReturn(people);
         PeopleDom result = peopleService.findByName("all", null, null, 1);
         assertEquals(3L, result.count());
         assertNotNull(result.results());
@@ -92,52 +92,52 @@ class PeopleServiceImplTest {
     @Test
     void findByName_cacheHit_paginationOutOfRange() {
         List<PeopleResultDom> people = Arrays.asList(leia, luke, han);
-        when(peopleCacheRepository.findByName("all")).thenReturn(people);
+        when(peopleCachePort.findByName("all")).thenReturn(people);
         PeopleDom result = peopleService.findByName("all", "name", "asc", 2);
         assertTrue(result.results().isEmpty());
     }
 
     @Test
     void findByName_cacheMiss_apiHit() {
-        when(peopleCacheRepository.findByName("Luke")).thenReturn(Collections.emptyList());
+        when(peopleCachePort.findByName("Luke")).thenReturn(Collections.emptyList());
         PeopleDom swapiResponse = new PeopleDom(1L, 1, List.of(luke));
-        when(peopleSwapiService.findByName("Luke")).thenReturn(swapiResponse);
+        when(peopleSwapiPort.findByName("Luke")).thenReturn(swapiResponse);
 
         PeopleDom result = peopleService.findByName("Luke", "name", "asc", 1);
         assertEquals(1L, result.count());
-        verify(peopleCacheRepository).save(eq("Luke"), any());
+        verify(peopleCachePort).save(eq("Luke"), any());
     }
 
     @Test
     void findByName_cacheMiss_apiNoResults() {
-        when(peopleCacheRepository.findByName("HanSolo")).thenReturn(Collections.emptyList());
+        when(peopleCachePort.findByName("HanSolo")).thenReturn(Collections.emptyList());
         PeopleDom swapiResponse = new PeopleDom(0L, 1, Collections.emptyList());
-        when(peopleSwapiService.findByName("HanSolo")).thenReturn(swapiResponse);
+        when(peopleSwapiPort.findByName("HanSolo")).thenReturn(swapiResponse);
 
         assertThrows(NotFoundException.class, () -> peopleService.findByName("HanSolo", "name", "asc", 1));
     }
 
     @Test
     void findById_cacheHit() {
-        when(peopleCacheRepository.findById(1)).thenReturn(Optional.of(luke));
+        when(peopleCachePort.findById(1)).thenReturn(Optional.of(luke));
         PeopleResultDom result = peopleService.findById(1);
         assertEquals("Luke", result.getName());
     }
 
     @Test
     void findById_cacheMiss_apiHit() {
-        when(peopleCacheRepository.findById(2)).thenReturn(Optional.empty());
-        when(peopleSwapiService.findById(2L)).thenReturn(leia);
+        when(peopleCachePort.findById(2)).thenReturn(Optional.empty());
+        when(peopleSwapiPort.findById(2L)).thenReturn(leia);
 
         PeopleResultDom result = peopleService.findById(2);
         assertEquals("Leia", result.getName());
-        verify(peopleCacheRepository).save(eq("Leia"), any());
+        verify(peopleCachePort).save(eq("Leia"), any());
     }
 
     @Test
     void findById_cacheMiss_apiNoResult() {
-        when(peopleCacheRepository.findById(3)).thenReturn(Optional.empty());
-        when(peopleSwapiService.findById(3L)).thenReturn(null);
+        when(peopleCachePort.findById(3)).thenReturn(Optional.empty());
+        when(peopleSwapiPort.findById(3L)).thenReturn(null);
 
         assertThrows(NotFoundException.class, () -> peopleService.findById(3));
     }

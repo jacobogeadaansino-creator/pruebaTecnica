@@ -9,8 +9,8 @@ import org.jacobo.pruebacapitole.application.service.commons.EntitySorter;
 import org.jacobo.pruebacapitole.domain.exception.NotFoundException;
 import org.jacobo.pruebacapitole.domain.model.people.PeopleDom;
 import org.jacobo.pruebacapitole.domain.model.people.PeopleResultDom;
-import org.jacobo.pruebacapitole.domain.service.PeopleSwapiService;
-import org.jacobo.pruebacapitole.domain.service.cache.people.PeopleCacheRepository;
+import org.jacobo.pruebacapitole.domain.service.PeopleSwapiPort;
+import org.jacobo.pruebacapitole.domain.service.cache.people.PeopleCachePort;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -21,9 +21,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PeopleServiceImpl implements PeopleService {
 
-    private final PeopleSwapiService peopleSwapiService;
+    private final PeopleSwapiPort peopleSwapiPort;
     private final EntitySorter<PeopleResultDom> peopleSorter;
-    private final PeopleCacheRepository peopleCacheRepository;
+    private final PeopleCachePort peopleCachePort;
     private static final int PAGE_SIZE = 15;
 
     @Override
@@ -31,15 +31,15 @@ public class PeopleServiceImpl implements PeopleService {
         if(Strings.isNullOrEmpty(order)){
             order = "asc";
         }
-        List<PeopleResultDom> result = peopleCacheRepository.findByName(name);
+        List<PeopleResultDom> result = peopleCachePort.findByName(name);
         if(result.isEmpty()){
             log.info("cache fails, going to api");
-            val swapiResponse = peopleSwapiService.findByName(name);
+            val swapiResponse = peopleSwapiPort.findByName(name);
             if (swapiResponse == null || swapiResponse.results() == null || swapiResponse.results().isEmpty()) {
                 throw new NotFoundException("There is not result for name {}" + name);
             }
             result = swapiResponse.results();
-            peopleCacheRepository.save(name, swapiResponse.results().get(0));
+            peopleCachePort.save(name, swapiResponse.results().get(0));
         }
         peopleSorter.sort(result, orderBy, order);
 
@@ -55,14 +55,14 @@ public class PeopleServiceImpl implements PeopleService {
 
     @Override
     public PeopleResultDom findById(Integer id) {
-        val cacheResult =  peopleCacheRepository.findById(id);
+        val cacheResult =  peopleCachePort.findById(id);
         if(cacheResult.isEmpty()){
             log.error("Cache fails, going to api" );
-            val response = peopleSwapiService.findById(Long.valueOf(id));
+            val response = peopleSwapiPort.findById(Long.valueOf(id));
             if(response == null) {
                 throw new NotFoundException("There is not result for id {}" + id);
             }
-            peopleCacheRepository.save(response.getName(), response);
+            peopleCachePort.save(response.getName(), response);
             return response;
         }
         return cacheResult.get();

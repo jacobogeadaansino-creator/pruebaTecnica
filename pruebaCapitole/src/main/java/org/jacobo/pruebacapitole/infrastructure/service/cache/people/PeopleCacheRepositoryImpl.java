@@ -3,7 +3,7 @@ package org.jacobo.pruebacapitole.infrastructure.service.cache.people;
 import lombok.RequiredArgsConstructor;
 import org.jacobo.pruebacapitole.domain.model.people.PeopleResultDom;
 import org.jacobo.pruebacapitole.domain.service.cache.NameCache;
-import org.jacobo.pruebacapitole.domain.service.cache.people.PeopleCacheRepository;
+import org.jacobo.pruebacapitole.domain.service.cache.people.PeopleCachePort;
 import org.jacobo.pruebacapitole.domain.service.cache.people.PeopleIdCache;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class PeopleCacheRepositoryImpl implements PeopleCacheRepository {
+public class PeopleCacheRepositoryImpl implements PeopleCachePort {
 
     private final NameCache<PeopleResultDom> peopleNameCache;
     private final PeopleIdCache peopleIdCache;

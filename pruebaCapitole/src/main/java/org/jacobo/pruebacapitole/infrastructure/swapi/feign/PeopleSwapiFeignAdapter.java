@@ -6,14 +6,14 @@ import lombok.val;
 import org.jacobo.pruebacapitole.domain.exception.NotFoundException;
 import org.jacobo.pruebacapitole.domain.model.people.PeopleDom;
 import org.jacobo.pruebacapitole.domain.model.people.PeopleResultDom;
-import org.jacobo.pruebacapitole.domain.service.PeopleSwapiService;
+import org.jacobo.pruebacapitole.domain.service.PeopleSwapiPort;
 import org.jacobo.pruebacapitole.infrastructure.swapi.mappers.PeopleFeignToDomMapper;
 import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class PeopleSwapiFeignAdapter implements PeopleSwapiService {
+public class PeopleSwapiFeignAdapter implements PeopleSwapiPort {
 
     private final StarWarsFeignClient starWarsFeignClient;
     private final PeopleFeignToDomMapper peopleFeignToDomMapper;
