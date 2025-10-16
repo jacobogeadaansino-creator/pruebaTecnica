@@ -5,11 +5,18 @@
 - Maven 3.8+
 - Docker
 
+## Servicio
+- El servicio esta disponible en http://84.235.232.186:6969/swagger-ui
+
+## Imagen docker
+
+- La imagen docker esta disponible en https://hub.docker.com/r/jacobogeada/prueba-capitole
+
 ## Compilación del proyecto
 
 1. Clona el repositorio y accede al directorio del proyecto:
    ```bash
-   git clone <url-del-repositorio>
+   git clone https://github.com/jacobogeadaansino-creator/pruebaTecnica.git
    cd pruebaTecnica/pruebaCapitole
    ```
 
@@ -29,7 +36,7 @@
 
 1. Ejecuta el contenedor Docker exponiendo el puerto 6969 y configurando la URL pública del servidor:
    ```bash
-   docker run -p 6969:6969 -e SERVER_URL=http://miservidor.com:6969 prueba-capitole
+   docker run -p 6969:6969 -e SERVER_URL=http://miservidor.com:6969 jacobogeada/prueba-capitole:0.0.2
    ```
    - Cambia `http://miservidor.com:6969` por la URL pública de tu servidor.
 
@@ -48,3 +55,5 @@ Este proyecto ya sigue una estructura por capas (domain, application, infrastruc
 - El archivo de configuración `application.yaml` se encuentra fuera del JAR y es copiado al contenedor Docker en `/app/config/application.yaml`.
 - Los logs de la aplicación se almacenan en `${HOME}/app/log/pruebatecnica.log` dentro del contenedor.
 - Puedes montar un volumen externo para los logs o la configuración si lo deseas.
+
+
